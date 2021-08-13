@@ -57,7 +57,6 @@ function App() {
     //... = JS spread syntax
 
     if (activity.id) {
-
       agent.Activities.update(activity).then(() => {
         //remove activity from the array and re-insert the edited one.
         setActivities([...activities.filter(x => x.id !== activity.id), activity]);

@@ -12,11 +12,11 @@ interface Props {
 
 export default function ActivityList({activities, selectActivity, deleteActivity, submitting}: Props) {
 
-    const [target, setTarget] = useState('');
+    const [deleteTarget, setDeleteTarget] = useState('');
 
     function handleDeleteActivity(e : SyntheticEvent<HTMLButtonElement>, id : string)
     {
-        setTarget(e.currentTarget.name);
+        setDeleteTarget(e.currentTarget.name);
         deleteActivity(id);
     }
 
@@ -43,7 +43,7 @@ export default function ActivityList({activities, selectActivity, deleteActivity
                                     floated='right' 
                                     content='Delete' 
                                     color='red' 
-                                    loading={submitting && target === activity.id}
+                                    loading={submitting && deleteTarget === activity.id}
                                 />
                                 <Label basic content={activity.category} />
                             </Item.Extra>
