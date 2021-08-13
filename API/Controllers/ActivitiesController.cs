@@ -13,6 +13,8 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Activity>>> GetActivities(CancellationToken ct)
         {
+            //CancellationToken is used here only to demonstrate a long running task
+            //return await Mediator.Send(new CancelleableList.Query(), ct);
             return await Mediator.Send(new List.Query(), ct);
         }
 
