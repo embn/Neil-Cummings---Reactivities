@@ -1,14 +1,13 @@
-import React from "react";
 import { Button, Card, Image } from "semantic-ui-react";
-import { Activity } from "../../../app/models/Activity";
+import Loading from "../../../app/layout/Loading";
+import { useStore } from "../../../app/stores/store";
 
-interface Props {
-    activity : Activity;
-    deselectActivity: () => void;
-    openForm: (id: string) => void;
-}
+export default function ActivityDetails() {
+    const {activityStore} = useStore();
+    const {selectedActivity : activity, openForm, deselectActivity} = activityStore;
 
-export default function ActivityDetails({activity, deselectActivity, openForm}: Props) {
+    if (!activity) return <Loading />;
+
     return (
         <Card fluid>
             {/* Backticks denotes a template literal */}

@@ -1,15 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import { Activity } from "../models/Activity";
 
-const sleep = (delay: number) => {
+
+axios.defaults.baseURL = 'http://localhost:5000/api';
+
+
+//delay fakery for testing
+/* const sleep = (delay: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, delay);
     })
 }
-
-axios.defaults.baseURL = 'http://localhost:5000/api';
-
-axios.interceptors.response.use(async response => { 
+ axios.interceptors.response.use(async response => { 
     try {
         await sleep(1000);
         return response;
@@ -17,7 +19,7 @@ axios.interceptors.response.use(async response => {
         console.log(error);
         return await Promise.reject(error);
     }
-});
+}); */
 
 const responseBody = <T> (response : AxiosResponse<T>) => response.data;
 
