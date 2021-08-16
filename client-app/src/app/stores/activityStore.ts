@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/Activity";
-import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
     activities = new Map<string, Activity>();
@@ -21,6 +20,13 @@ export default class ActivityStore {
         ); 
     }
 
+    private setActivity = (activity: Activity) => {
+        activity.date = activity.date.split('T')[0];
+        this.activities.set(activity.id, activity)
+    }
+    private getActivity = (id: string) => {
+        return this.activities.get(id);
+    }
     setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;
     }
@@ -29,13 +35,12 @@ export default class ActivityStore {
     we achieve this by using arrow function, alternatively the makeObservable could set it as action.bound
     */
     loadActivities = async () => {
+        this.loadingInitial = true;
         try {
             const activities = await agent.Activities.list();
-            
             activities.forEach(activity => {
-                activity.date = activity.date.split('T')[0];
-                this.activities.set(activity.id, activity);
-              });
+                this.setActivity(activity);
+            });
         } catch(error) {
             console.log(error);
         } finally {
@@ -43,26 +48,34 @@ export default class ActivityStore {
         }
     }
 
-    selectActivity = (id: string) => {
-        this.selectedActivity = this.activities.get(id);
-    }
+    //async is syntactic sugar. it compiles to promise syntax
+    loadActivity = async (id: string) => {
+        let activity = this.getActivity(id);
+        if (activity) {
+            this.selectedActivity = activity;
+        } else {
+            this.loadingInitial = true;
+            try {
+                activity = await agent.Activities.details(id);
+                this.setActivity(activity);
+                runInAction(() => {
+                    this.selectedActivity = activity;
+                });
+            }
+            catch (error) {
+                console.log(error);
+                
+            } finally {
+                this.setLoadingInitial(false);
+            }
 
-    deselectActivity = () => {
-        this.selectedActivity = undefined;
-    }
-
-    openForm = (id?: string) => {
-        id ? this.selectActivity(id) : this.deselectActivity();
-        this.formIsOpen = true;
-    }
-
-    closeForm = () => {
-        this.formIsOpen = false;
+        }
+        //need to return so our return value is guaranteed to be Promise<Activity>
+        return activity;
     }
 
     createActivity = async (activity: Activity) => {
         this.loading = true;
-        activity.id = uuid();
         try {
             await agent.Activities.create(activity);
 
@@ -77,7 +90,7 @@ export default class ActivityStore {
         } catch(error) {
             console.log(error);
             runInAction(() => {
-                this.loading =false;
+                this.loading = false;
             });            
         }
     }
@@ -108,9 +121,6 @@ export default class ActivityStore {
             await agent.Activities.delete(id);
             runInAction(() => {
                 this.activities.delete(id);
-                if ( id === this.selectedActivity?.id) {
-                    this.deselectActivity();
-                }
                 this.loading = false;
             });
         }

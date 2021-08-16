@@ -1,30 +1,39 @@
-import { useEffect } from 'react';
 import { Container } from 'semantic-ui-react';
 import NavBar from './NavBar';
-import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
-import Loading from './Loading';
 import { observer } from 'mobx-react-lite';
-import { useStore } from '../stores/store';
+import { Route, useLocation } from 'react-router-dom';
+import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
+import ActivityForm from '../../features/activities/form/ActivityForm';
+import ActivityDetails from '../../features/activities/details/ActivityDetails';
+import HomePage from '../../features/activities/home/HomePage';
 
 function App() {
-
-  //we only want activityStore from the Store onject, so we deconstruct it. 
-  const {activityStore} = useStore();
-
-  //VERY IMPORTANT to pass a DependencyList to useEffect
-  //lest the component will re-render itself endlessly fetching data
-  useEffect(() => {
-    activityStore.loadActivities();
-  }, []);
-
-  if (activityStore.loadingInitial) return <Loading content='Loading app' />
-
+  const location = useLocation();
   return (
     <>
-      <NavBar/>
-      <Container style={{marginTop: '7em'}}>
-        <ActivityDashboard />
-      </Container>
+
+      <Route exact path='/' component={HomePage}/>
+      <Route path={'/(.+)'} render={() => (
+        //fragment (shorthand) is needed because we can only return 1 element
+        <>
+          <NavBar/>
+          <Container style={{marginTop: '7em'}}>
+            {/* Yellow components are not observers */}
+            
+            <Route exact path='/activities' component={ActivityDashboard}/>
+            <Route path='/activities/:id' component={ActivityDetails}/>
+
+            {/* Since we re-use ActivityForm for different routes, it's important to set a key
+                otherwise requesting createActivity will not clear the form 
+
+                https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+            */}
+            <Route path={['/createActivity', '/manage/:id']} key={location.key} component={ActivityForm}/>
+          </Container>
+        </>
+
+      )}/>
+      
     </>
   );
 }
