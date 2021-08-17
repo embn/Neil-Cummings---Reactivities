@@ -11,7 +11,7 @@ using Persistence;
 namespace Application.Activities
 {
     //This class exists only to demonstrate a long running task
-    public class CancelleableList
+    public class CancelleableListTest
     {
         public class Query : IRequest<List<Activity>>
         {
@@ -21,9 +21,9 @@ namespace Application.Activities
         public class Handler : IRequestHandler<Query, List<Activity>>
         {
             private readonly DataContext context;
-            private readonly ILogger<CancelleableList> logger;
+            private readonly ILogger<CancelleableListTest> logger;
 
-            public Handler(DataContext context, ILogger<CancelleableList> logger)
+            public Handler(DataContext context, ILogger<CancelleableListTest> logger)
             {
                 this.context = context;
                 this.logger = logger;

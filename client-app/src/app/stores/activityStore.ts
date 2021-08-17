@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Activity } from "../models/Activity";
+import { Activity } from "../models/activity";
 
 export default class ActivityStore {
     activities = new Map<string, Activity>();
@@ -13,12 +13,7 @@ export default class ActivityStore {
         makeAutoObservable(this);
     }
 
-    //computed property
-    get activitiesByDate() {
-        return Array.from(this.activities.values()).sort((a, b) => 
-            Date.parse(a.date) - Date.parse(b.date)
-        ); 
-    }
+
 
     private setActivity = (activity: Activity) => {
         activity.date = activity.date.split('T')[0];
@@ -30,6 +25,28 @@ export default class ActivityStore {
     setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;
     }
+    //computed property
+    get activitiesByDate() {
+        return Array.from(this.activities.values()).sort((a, b) => 
+            Date.parse(a.date) - Date.parse(b.date)
+        ); 
+    }
+    //property properly computed from a computed property
+    get groupedActivities() {
+
+        return Object.entries(
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = activity.date
+                /*we use object property accessor to get the Activity[] which has the particular date 
+                if the Activity[] is truthy then we 
+                */
+                activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+                return activities;
+            }, {} as {[key: string]: Activity[]})/* initial value used to build return value of reduce */
+        );
+    }
+
+
 
     /*because we are using 'this' keyword the method needs to be "bound" to the class.
     we achieve this by using arrow function, alternatively the makeObservable could set it as action.bound

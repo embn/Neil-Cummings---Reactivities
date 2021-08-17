@@ -11,14 +11,20 @@ function App() {
   const location = useLocation();
   return (
     <>
+      {/* 1. the Route path properties determines what gets rendered.
+             every matching path gets rendered along side each other
 
+          2. Components highlighted in yellow are regular react components,
+             whereas the others are decorated with observer functions (mobx-react-lite)
+       */}
+  
       <Route exact path='/' component={HomePage}/>
       <Route path={'/(.+)'} render={() => (
-        //fragment (shorthand) is needed because we can only return 1 element
+        //fragment (shorthand) is needed because JSX expressions must have a singular parent element
         <>
           <NavBar/>
           <Container style={{marginTop: '7em'}}>
-            {/* Yellow components are not observers */}
+            
             
             <Route exact path='/activities' component={ActivityDashboard}/>
             <Route path='/activities/:id' component={ActivityDetails}/>

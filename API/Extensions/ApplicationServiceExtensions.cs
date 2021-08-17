@@ -27,7 +27,7 @@ namespace API.Extensions
                 });
             });
             services.AddLogging();
-            services.AddMediatR(typeof(CancelleableList.Handler).Assembly);
+            services.AddMediatR(typeof(CancelleableListTest.Handler).Assembly);
             services.AddAutoMapper(x => x.AddProfile<MappingProfile>());
             return services;
         }
