@@ -13,10 +13,7 @@ namespace Application.Activities
     //This class exists only to demonstrate a long running task
     public class CancelleableListTest
     {
-        public class Query : IRequest<List<Activity>>
-        {
-
-        }
+        public class Query : IRequest<List<Activity>> { }
 
         public class Handler : IRequestHandler<Query, List<Activity>>
         {
