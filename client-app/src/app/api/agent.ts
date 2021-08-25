@@ -24,7 +24,7 @@ const sleep = (delay: number) => {
             if (typeof data === 'string') {
                 toast.error(data);
             }
-            if (config.method?.toUpperCase() === 'GET' && data.errors.hasOwnPropery('id')) { 
+            if (config.method?.toUpperCase() === 'GET' && data.errors.hasOwnProperty('id')) { 
                 history.push('/not-found');
             }
             if (data.errors) {

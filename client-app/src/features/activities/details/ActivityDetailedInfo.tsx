@@ -1,5 +1,7 @@
+import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import {Segment, Grid, Icon} from 'semantic-ui-react'
+import { dateTimeFormat } from '../../../app/common/lozalization/dateFormat';
 import { Activity } from '../../../app/models/activity';
 
 
@@ -27,7 +29,7 @@ export default observer(function ActivityDetailedInfo({activity}: Props) {
                     </Grid.Column>
                     <Grid.Column width={15}>
             <span>
-              {activity.date}
+                {format(activity.date!, dateTimeFormat)}
             </span>
                     </Grid.Column>
                 </Grid>
