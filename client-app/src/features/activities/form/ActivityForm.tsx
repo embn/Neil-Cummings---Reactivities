@@ -24,8 +24,8 @@ export default observer(function ActivityForm() {
     const {loadingInitial, loading, createActivity, updateActivity, loadActivity} = activityStore;
     const {id} = useParams<{id: string}>();
     const validationSchema = yup.object({
-        title: yup.string().required('The activity title is required.'),
-        description: yup.string().required('The activity description is required.'),
+        title: yup.string().required(),
+        description: yup.string().required(),
         category: yup.string().required(),
         date: yup.string().required('Date is required').nullable(),
         venue: yup.string().required(),

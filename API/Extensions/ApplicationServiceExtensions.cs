@@ -13,9 +13,9 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddSwaggerGen(opts =>
+            services.AddSwaggerGen(opt =>
             {
-                opts.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
             services.AddDbContext<DataContext>(opt =>
             {
@@ -27,7 +27,7 @@ namespace API.Extensions
                 });
             });
             services.AddLogging();
-            services.AddMediatR(typeof(CancelleableListTest.Handler).Assembly);
+            services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(x => x.AddProfile<MappingProfile>());
             return services;
         }
