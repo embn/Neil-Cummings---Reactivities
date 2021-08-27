@@ -52,9 +52,17 @@ namespace API.Controllers
         public async Task<ActionResult<User>> Register(Registration registration) 
         {
             if (await userManager.Users.AnyAsync(x => x.Email == registration.Email))
-                return BadRequest("Email taken");
+            {
+                ModelState.AddModelError("Email", "Email taken");
+                return ValidationProblem();
+            }
+                
             if (await userManager.Users.AnyAsync(x => x.UserName == registration.UserName))
-                return BadRequest("UserName taken");
+            {
+                ModelState.AddModelError("UserName", "UserName taken");
+                return ValidationProblem();
+            }
+                
 
             var user = new AppUser
             {
