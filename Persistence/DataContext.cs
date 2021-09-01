@@ -17,6 +17,8 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // Rather than ussing EF conventions, which would generate a simple jointable with ids,
+            // we use EF fluent API here in order to make our own jointable
 
             builder.Entity<ActivityAttendee>(x => x.HasKey(aa => new { aa.AppUserId, aa.ActivityId }));
 
