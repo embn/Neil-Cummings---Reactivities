@@ -25,7 +25,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(opt => {
-                /* Require Authenticated User - unless we say otherwise! */
+                // Require Authenticated User - unless we say otherwise!
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 
                 opt.Filters.Add(new AuthorizeFilter(policy));
