@@ -48,11 +48,5 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id}));
         }
-        [HttpPost("{id}/cancel")]
-        [Authorize(Policy = "IsActivityHost")]
-        public async Task<IActionResult> Cancel(Guid id)
-        {
-            return HandleResult(await Mediator.Send(new CancelAttendance.Command { Id = id}));
-        }
     }
 }

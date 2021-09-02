@@ -4,7 +4,6 @@ import { observer } from 'mobx-react-lite';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import HomePage from '../../features/home/HomePage';
-import ActivityForm from '../../features/form/ActivityForm';
 import TestErrors from '../../features/errors/TestErrors';
 import ServerError from '../../features/errors/ServerError';
 import NotFound from '../../features/errors/NotFound';
@@ -15,6 +14,7 @@ import { useStore } from '../stores/store';
 import { useEffect } from 'react';
 import Loading from './Loading';
 import ModalContainer from '../common/modals/ModalContainer';
+import ActivityForm from '../../features/activities/form/ActivityForm';
 
 function App() {
   const location = useLocation();

@@ -21,7 +21,6 @@ namespace Application.Activities
         {
             private readonly DataContext context;
             private readonly IUserAccessor userAccessor;
-
             public Handler(DataContext context, IUserAccessor userAccessor)
             {
                 this.context = context;
@@ -46,26 +45,26 @@ namespace Application.Activities
 
                 string hostName = activity.Attendees.FirstOrDefault(x => x.IsHost)?.AppUser?.UserName;
                 ActivityAttendee attendance = activity.Attendees.FirstOrDefault(x => x.AppUserId == user.Id);
-                if (hostName == user.UserName)
-                {
-                    return Result<Unit>.Failure("As a host you cannot update attendance. If you wish to cancel the event go to /activities/cancel");
-                }
+
+                if (attendance != null && hostName == user.UserName)
+                    activity.IsCancelled = !activity.IsCancelled;
+
+                if (attendance != null && hostName != user.UserName)
+                    activity.Attendees.Remove(attendance);
+
                 if (attendance == null)
                 {
                     attendance = new ActivityAttendee
                     {
                         AppUser = user,
                         Activity = activity,
+                        IsHost = false
                     };
+
                     activity.Attendees.Add(attendance);
-                }
-                else 
-                {
-                    activity.Attendees.Remove(attendance);
                 }
                 bool success = await context.SaveChangesAsync() > 0;
                 return success ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Problem updating attendance");
-
             }
         }
     }

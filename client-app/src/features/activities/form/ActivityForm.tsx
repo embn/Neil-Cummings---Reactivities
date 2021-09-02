@@ -13,15 +13,15 @@ import MyTextArea from "../../../app/common/form/MyTextArea";
 import MyTextSelectInput from "../../../app/common/form/MySelectInput";
 import { categoryOptions } from "../../../app/common/options/categoryOptions";
 import MyDateInput from "../../../app/common/form/MyDateInput";
-import { Activity } from "../../../app/models/activity";
-import { dateTimeFormat } from "../../../app/common/lozalization/dateFormat";
+import { ActivityFormValues } from "../../../app/models/activity";
+import { dateTimeFormat } from "../../../app/common/globalization/dateFormat";
 
 
 export default observer(function ActivityForm() {
 
     const history = useHistory();
     const {activityStore} = useStore();
-    const {loadingInitial, loading, createActivity, updateActivity, loadActivity} = activityStore;
+    const {loadingInitial, createActivity, updateActivity, loadActivity} = activityStore;
     const {id} = useParams<{id: string}>();
     const validationSchema = yup.object({
         title: yup.string().required(),
@@ -32,25 +32,17 @@ export default observer(function ActivityForm() {
         city: yup.string().required(),
 
     })
-    const [activity, setActivity] = useState<Activity>({
-        id: '',
-        title: '',
-        description: '',
-        category: '',
-        date: null,
-        venue: '',
-        city: ''
-    });
+    const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
 
     //useEffect is run on render, and will re-run each time dependencies change
     useEffect(() => {
         //! is used to ignore typescript, since we expect no scenario in which loadActivity returns undefined
         if (id) 
-            loadActivity(id).then(activity => setActivity(activity!));
+            loadActivity(id).then(activity => setActivity(new ActivityFormValues(activity)));
         
     }, [id, loadActivity]);
 
-    function handleFormSubmit(activity : Activity) {
+    function handleFormSubmit(activity : ActivityFormValues) {
         if (activity.id) {
             updateActivity(activity).then(() => { history.push(`/activities/${activity.id}`) });
             
@@ -91,7 +83,7 @@ export default observer(function ActivityForm() {
                         <MyTextInput placeholder='Venue' name='venue'/>
                         <Button 
                             content='Submit'
-                            loading={loading}
+                            loading={isSubmitting}
                             floated='right'
                             positive type='submit'
                             disabled={isSubmitting || !dirty || !isValid}
