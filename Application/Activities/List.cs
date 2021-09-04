@@ -25,7 +25,7 @@ namespace Application.Activities
                 this.mapper = mapper;
             }
 
-            public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<ActivityDto>>> Handle(Query query, CancellationToken cancellationToken)
             {
 
                 // Using projection (AutoMapper) eagerly loads related entities as long as they have a mapping profile,

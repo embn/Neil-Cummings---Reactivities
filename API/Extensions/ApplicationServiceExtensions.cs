@@ -1,6 +1,8 @@
 using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
+using Application.Photos;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +19,7 @@ namespace API.Extensions
         {
             services.AddSwaggerGen(opt =>
             {
-                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Reactivities API", Version = "v1" });
             });
             services.AddDbContext<DataContext>(opt =>
             {
@@ -32,6 +34,10 @@ namespace API.Extensions
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(x => x.AddProfile<MappingProfile>());
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+
+            services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+
             return services;
         }
     }

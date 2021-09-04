@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using API.DTOs;
@@ -12,18 +13,17 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
         private readonly TokenService tokenService;
 
-        private User createUserObject(AppUser user) {
-            return new User
+        private UserDto createUserObject(AppUser user) {
+            return new UserDto
             {
                 DisplayName = user.DisplayName,
-                Image = null,
+                Image = user.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
                 Token = tokenService.CreateToken(user),
                 UserName = user.UserName,
             };
@@ -35,9 +35,12 @@ namespace API.Controllers
             this.tokenService = tokenService;
         }
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login(Login login)
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDto>> Login(Login login)
         {
-            var user = await userManager.FindByEmailAsync(login.Email);
+            var user = await userManager.Users
+                .Include(x => x.Photos)
+                .SingleOrDefaultAsync(x => x.Email == login.Email);
             if (user == null) 
                 return Unauthorized();
 
@@ -49,7 +52,8 @@ namespace API.Controllers
             return Unauthorized();
         }
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(Registration registration) 
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDto>> Register(Registration registration) 
         {
             if (await userManager.Users.AnyAsync(x => x.Email == registration.Email))
             {
@@ -78,9 +82,8 @@ namespace API.Controllers
 
             return BadRequest("Problem registering user");
         }
-        [HttpGet()]
-        [Authorize]
-        public async Task<ActionResult<User>> GetCurrentUser()
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
             return createUserObject(user);

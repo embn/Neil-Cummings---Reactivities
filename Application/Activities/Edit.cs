@@ -34,14 +34,14 @@ namespace Application.Activities
                 this.mapper = mapper;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command command, CancellationToken cancellationToken)
             {
-                Activity activity = await context.Activities.FindAsync(request.Activity.Id);
+                Activity activity = await context.Activities.FindAsync(command.Activity.Id);
 
                 if (activity == null) 
                     return null;
 
-                mapper.Map(request.Activity, activity);
+                mapper.Map(command.Activity, activity);
                 bool success = await context.SaveChangesAsync() > 0;
 
                 if (success) 

@@ -24,9 +24,9 @@ namespace Application.Activities
                 this.context = context;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command command, CancellationToken cancellationToken)
             {
-                Activity activity = await context.Activities.FindAsync(request.Id);
+                Activity activity = await context.Activities.FindAsync(command.Id);
 
                 if (activity == null)
                     return null;

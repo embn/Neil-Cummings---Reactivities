@@ -21,25 +21,26 @@ namespace Infrastructure.Security
             this.dbContext = dbContext;
             this.httpContextAccessor = httpContextAccessor;
         }
-
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement)
         {
             string userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId == null)
                 return Task.CompletedTask;
-            string activityIdString = httpContextAccessor.HttpContext?.Request.RouteValues
-                .SingleOrDefault(x => x.Key == "id").Value?
-                .ToString();
-            Guid activityId = Guid.Parse(activityIdString);
 
-            // AsNoTracking is important here to prevent a bug where attendee will stick around in memory
-            // and will cause all attendees to be deleted when an activity is edited. 
+            Guid activityId = Guid.Parse(
+                    httpContextAccessor.HttpContext?.Request.RouteValues
+                        .SingleOrDefault(x => x.Key == "id").Value?
+                        .ToString());
+
+            // AsNoTracking is needed because:
+            // 1. naviagation properties are null when not included
+            // 2. lifetime dbContext is the whole http-request 
+            // 3. even though we leave the scope of this method dbContext still keeps the attendee in memory in order to track it.
             ActivityAttendee attendee = dbContext.ActivityAttendees
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.AppUserId == userId && x.ActivityId == activityId)
                 .Result;
-
             if (attendee == null)
                 return Task.CompletedTask;
 

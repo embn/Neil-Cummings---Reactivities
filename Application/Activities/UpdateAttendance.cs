@@ -27,12 +27,12 @@ namespace Application.Activities
                 this.userAccessor = userAccessor;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command command, CancellationToken cancellationToken)
             {
                 Activity activity = await context.Activities
                     .Include(a => a.Attendees)
                     .ThenInclude(aa => aa.AppUser)
-                    .FirstOrDefaultAsync(x => x.Id == request.Id);
+                    .FirstOrDefaultAsync(x => x.Id == command.Id);
 
                 if (activity == null)
                     return null;

@@ -28,11 +28,11 @@ namespace Application.Activities
                 this.mapper = mapper;
             }
 
-            public async Task<Result<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<ActivityDto>> Handle(Query query, CancellationToken cancellationToken)
             {
                 var activity = await context.Activities
                     .ProjectTo<ActivityDto>(mapper.ConfigurationProvider)
-                    .FirstOrDefaultAsync(x => x.Id == request.Id);
+                    .FirstOrDefaultAsync(x => x.Id == query.Id);
                 
                     
 

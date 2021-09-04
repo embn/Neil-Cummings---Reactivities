@@ -36,26 +36,26 @@ namespace Application.Activities
                 this.userAccessor = userAccessor;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command command, CancellationToken cancellationToken)
             {
                 AppUser user = await context.Users.FirstOrDefaultAsync(x => x.UserName == userAccessor.GetUserName());
 
                 var attendee = new ActivityAttendee
                 {
                     AppUser = user,
-                    Activity = request.Activity,
+                    Activity = command.Activity,
                     IsHost = true
                 };
-                request.Activity.Attendees.Add(attendee);
+                command.Activity.Attendees.Add(attendee);
                 
                 //Unnecessary to use AddAsync 
-                context.Activities.Add(request.Activity);
+                context.Activities.Add(command.Activity);
 
-                bool success = await context.SaveChangesAsync() > 0;
+                bool created = await context.SaveChangesAsync() > 0;
 
                 //Returning Unit.Value is just to report success
 
-                return (success) ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Failed to create activity");
+                return (created) ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Failed to create activity");
             }
         }
     }
