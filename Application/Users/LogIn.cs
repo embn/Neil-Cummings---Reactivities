@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Core;
@@ -31,7 +32,7 @@ namespace Application.Users
             public async Task<Result<UserDto>> Handle(Command command, CancellationToken cancellationToken)
             {
                 var user = await userManager.Users
-                    .Include(x => x.Photos)
+                    .Include(x => x.Photos.Where(x => x.IsMain))
                     .SingleOrDefaultAsync(x => x.Email == command.Credentials.Email);
                 
                 if (user == null)
@@ -47,6 +48,7 @@ namespace Application.Users
                     DisplayName = user.DisplayName,
                     Token = tokenService.CreateToken(user),
                     UserName = user.UserName,
+                    Image = user.Photos.FirstOrDefault(x => x.IsMain).Url
                 };
                 return Result<UserDto>.Success(userDto);
             }

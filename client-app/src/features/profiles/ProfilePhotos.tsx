@@ -11,7 +11,7 @@ interface Props {
 
 export default observer(function ProfilePhotos({profile}:Props) {
 
-    const {profileStore: {IsCurrentUser, uploadPhoto, uploadingPhoto, loadingPhoto, setMainPhoto, deletePhoto}} = useStore();
+    const { profileStore: {IsCurrentUser, uploadPhoto, uploadingPhoto, loadingPhoto, setMainPhoto, deletePhoto} } = useStore();
     const [addPhotoMode, setAddPhotoMode] = useState(false);
     const [targetPhoto, setTargetPhoto] = useState('');
 

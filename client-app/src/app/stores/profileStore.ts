@@ -38,14 +38,15 @@ export default class ProfileStore {
         this.uploadingPhoto = true;
         try {
             const photo = await agent.Profile.uploadPhoto(file);
-            if (this.profile) {
-                console.log(JSON.stringify(this.profile.photos));
-                if (photo.isMain && store.userStore.user) {
-                    store.userStore.setImage(photo.url);
-                    this.profile.image = photo.url;
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile.photos?.push(photo);
+                    if (photo.isMain && store.userStore.user) {
+                        store.userStore.setImage(photo.url);
+                        this.profile.image = photo.url;
+                    }
                 }
-            }
-
+            })
         } catch (error) {
             console.log(error);
         } finally {

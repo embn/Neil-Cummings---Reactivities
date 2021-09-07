@@ -8,6 +8,7 @@ using Identity;
 using Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Users
 {
@@ -29,7 +30,9 @@ namespace Application.Users
 
             public async Task<Result<UserDto>> Handle(Query query, CancellationToken cancellationToken)
             {
-                var user = await userManager.FindByNameAsync(httpContextAccessor.HttpContext.User.Identity.Name);
+                var user = await userManager.Users
+                    .Include(x => x.Photos.Where(x => x.IsMain))
+                    .FirstOrDefaultAsync(x => x.UserName == httpContextAccessor.HttpContext.User.Identity.Name);
 
                 if (user == null)
                     return null;
@@ -39,6 +42,7 @@ namespace Application.Users
                     DisplayName = user.DisplayName,
                     Token = tokenService.CreateToken(user),
                     UserName = user.UserName,
+                    Image = user.Photos.FirstOrDefault(x => x.IsMain).Url
                 };
 
                 return Result<UserDto>.Success(userDto);

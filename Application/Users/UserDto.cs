@@ -1,3 +1,6 @@
+using System.Linq;
+using Domain;
+
 namespace Application.Users
 {
     public class UserDto
