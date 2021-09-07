@@ -1,6 +1,7 @@
 using System.Text;
-using API.Services;
 using Domain;
+using Identity;
+using Identity.Services;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,8 @@ namespace API.Extensions
                 opt.Password.RequireNonAlphanumeric = false;
             })
             .AddEntityFrameworkStores<DataContext>()
-            .AddSignInManager<SignInManager<AppUser>>();
+            .AddSignInManager<Identity.SignInManager<AppUser>>()
+            .AddUserManager<Identity.UserManager<AppUser>>();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["API:Key"]));
 
@@ -45,7 +47,7 @@ namespace API.Extensions
                 });
             });
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
-            services.AddScoped<TokenService>();
+            services.AddScoped<JWT>();
             return services;
         }
     }

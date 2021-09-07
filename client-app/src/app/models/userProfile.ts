@@ -5,8 +5,13 @@ export interface UserProfile {
     displayName: string;
     bio?: string;
     image?: string;
+    photos?: Photo[];
 }
-
+export interface Photo {
+    id: string;
+    url: string;
+    isMain: boolean;
+}
 export class UserProfile implements UserProfile {
     constructor(user: User) {
         this.userName = user.userName;
@@ -14,3 +19,4 @@ export class UserProfile implements UserProfile {
         this.image = user.image;
     }
 }
+

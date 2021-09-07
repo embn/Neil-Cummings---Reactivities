@@ -29,14 +29,13 @@ namespace Application.Photos
             }
             public async Task<Result<Unit>> Handle(Command command, CancellationToken cancellationToken)
             {
-                var user = await context.Users.Include(p => p.Photos)
-                    .FirstOrDefaultAsync(x => x.UserName == userAccessor.GetUserName());
+                var photo = await context.Photos.Include(p => p.User).FirstOrDefaultAsync(x => x.Id == command.Id);
 
-                if (user == null) return null;
+                if (photo == null || photo.User == null) 
+                    return null;
 
-                var photo = user.Photos.FirstOrDefault(x => x.Id == command.Id);
-
-                if (photo == null) return null;
+                if (userAccessor.GetUserName() != photo.User.UserName)
+                    return Result<Unit>.Failure("You do not own this photo");
 
                 if (photo.IsMain)
                     return Result<Unit>.Failure("You cannot delete your main photo");

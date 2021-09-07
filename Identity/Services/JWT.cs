@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace API.Services
+namespace Identity.Services
 {
-    public class TokenService
+    public class JWT
     {
         private readonly IConfiguration config;
-        public TokenService(IConfiguration config)
+        public JWT(IConfiguration config)
         {
             this.config = config;
         }
 
-        public string CreateToken(AppUser user)
+        public string CreateToken(IdentityUser user)
         {
             var claims = new List<Claim>()
             {

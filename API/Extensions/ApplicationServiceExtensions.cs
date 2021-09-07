@@ -2,6 +2,7 @@ using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
 using Application.Photos;
+using Application.Users;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
@@ -33,11 +34,13 @@ namespace API.Extensions
             services.AddLogging();
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(x => x.AddProfile<MappingProfile>());
+
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
 
+            services.Configure<PasswordRequirements>(config.GetSection("Password"));
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
-
+            
             return services;
         }
     }

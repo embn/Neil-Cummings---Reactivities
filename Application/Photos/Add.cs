@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Core;
 using Application.Interfaces;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,51 +14,53 @@ namespace Application.Photos
 {
     public class Add
     {
-        public class Command : IRequest<Result<Photo>>
+        public class Command : IRequest<Result<PhotoDto>>
         {
-            public IFormFile File { get; set; }    
+            public IFormFile File { get; set; }
         }
-        public class Handler : IRequestHandler<Command, Result<Photo>>
+        public class Handler : IRequestHandler<Command, Result<PhotoDto>>
         {
             private readonly DataContext context;
             private readonly IPhotoAccessor photoAccessor;
             private readonly IUserAccessor userAccessor;
+            private readonly IMapper mapper;
 
-            public Handler(DataContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor)
+            public Handler(DataContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor, IMapper mapper)
             {
+                this.mapper = mapper;
                 this.context = context;
                 this.photoAccessor = photoAccessor;
                 this.userAccessor = userAccessor;
             }
 
-            public async Task<Result<Photo>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<PhotoDto>> Handle(Command command, CancellationToken cancellationToken)
             {
-                
+
                 AppUser user = await context.Users
-                    .Include(u => u.Photos)
+                    .Include(u => u.Photos.Where(x => x.IsMain))
                     .FirstOrDefaultAsync(u => u.UserName == userAccessor
                     .GetUserName());
                 if (user == null)
                 {
                     return null;
                 }
-                PhotoUploadResult result = await photoAccessor.AddPhoto(request.File);
+                PhotoUploadResult result = await photoAccessor.AddPhoto(command.File);
                 var photo = new Photo
                 {
                     Id = result.PublicId,
                     Url = result.Url,
-                    //AppUserId = user.Id
+                    UserId = user.Id
                 };
                 if (user.Photos.Any(x => x.IsMain) == false)
                     photo.IsMain = true;
-                    
-                user.Photos.Add(photo);
+
+                await context.Photos.AddAsync(photo);
                 bool added = await context.SaveChangesAsync() > 0;
                 if (added)
                 {
-                    return Result<Photo>.Success(photo);
+                    return Result<PhotoDto>.Success(mapper.Map<PhotoDto>(photo));
                 }
-                return Result<Photo>.Failure("Failed to add photo");
+                return Result<PhotoDto>.Failure("Failed to add photo");
             }
         }
     }

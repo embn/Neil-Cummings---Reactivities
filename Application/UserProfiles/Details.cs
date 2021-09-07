@@ -15,7 +15,6 @@ public class Details
         {
             public string UserName { get; set; }
         }
-
         public class Handler : IRequestHandler<Query, Result<Profile>>
         {
             private readonly DataContext context;

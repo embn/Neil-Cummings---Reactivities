@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { history } from "../..";
 import { Activity, ActivityFormValues } from "../models/activity";
 import { User, UserFormValues } from "../models/user";
+import { Photo, UserProfile } from "../models/userProfile";
 import { store } from "../stores/store";
 
 
@@ -17,7 +18,7 @@ const sleep = (delay: number) => {
 }
 
 axios.interceptors.response.use(async response => { 
-    await sleep(500);
+    await sleep(1000);
     return response;
 }, (error: AxiosError) => {
     const {data, status, config} = error.response!;
@@ -68,7 +69,6 @@ const requests = {
     put: <T> (url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
     del: <T> (url: string) => axios.delete<T>(url).then(responseBody),
 }
-
 const Activities = {
     list: () => requests.get<Activity[]>('/activities'),
     details: (id: string) => requests.get<Activity>(`activities/${id}`),
@@ -77,17 +77,29 @@ const Activities = {
     delete: (id: string) => requests.del<void>(`activities/${id}`),
     attend: (id: string) => requests.post<void>(`activities/${id}/attend`, {}),
 }
-
 const Account = {
     current: () => requests.get<User>('/account'),
     login: (user: UserFormValues) => requests.post<User>('/account/login', user),
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
 }
-
-
+const Profile = {
+    get: (username: string) => requests.get<UserProfile>(`/profile/${username}`),
+    uploadPhoto: (file: Blob) => {
+        let formData = new FormData();
+        //key needs to match parameter in API
+        formData.append('File', file )
+        return axios.post<Photo>('photos', formData, {
+            headers: { 'Content-type': 'multipart/form-data' }
+        })
+        .then(responseBody);
+    },
+    setMainPhoto: (id: string) => requests.put(`photos/${id}/setMain`, {}),
+    deletePhoto: (id: string) => requests.del(`photos/${id}`),
+}
 const agent = {
     Activities,
-    Account
+    Account,
+    Profile 
 }
 
 export default agent;

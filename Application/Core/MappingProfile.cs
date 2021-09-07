@@ -1,5 +1,6 @@
 using System.Linq;
 using Application.Activities;
+using Application.Photos;
 using Application.UserProfiles;
 using Domain;
 
@@ -27,6 +28,8 @@ namespace Application.Core
             CreateMap<AppUser, Profile>()
                 .ForMember(dest => dest.Image, opt => 
                     opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url));
+
+            CreateMap<Photo, PhotoDto>();
         }
     }
 }
