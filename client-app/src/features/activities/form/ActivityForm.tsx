@@ -32,13 +32,13 @@ export default observer(function ActivityForm() {
         city: yup.string().required(),
 
     })
-    const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
+    const [activityFormValues, setActivityFormValues] = useState<ActivityFormValues>(new ActivityFormValues());
 
     //useEffect is run on render, and will re-run each time dependencies change
     useEffect(() => {
         //! is used to ignore typescript, since we expect no scenario in which loadActivity returns undefined
         if (id) 
-            loadActivity(id).then(activity => setActivity(new ActivityFormValues(activity)));
+            loadActivity(id).then(activity => setActivityFormValues(new ActivityFormValues(activity)));
         
     }, [id, loadActivity]);
 
@@ -62,7 +62,7 @@ export default observer(function ActivityForm() {
             <Header content='Activity Details' sub color='teal'/>
             <Formik 
                 validationSchema={validationSchema}
-                initialValues={activity} 
+                initialValues={activityFormValues} 
                 enableReinitialize 
                 onSubmit={values => handleFormSubmit(values)}>
                 {({ handleSubmit, isValid, isSubmitting, dirty }) => (

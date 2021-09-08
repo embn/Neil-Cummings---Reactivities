@@ -20,9 +20,9 @@ namespace Application.Users
         {
             private readonly UserManager<AppUser> userManager;
             private readonly Identity.SignInManager<AppUser> signInManager;
-            private readonly JWT tokenService;
+            private readonly TokenService tokenService;
 
-            public Handler(UserManager<AppUser> userManager, Identity.SignInManager<AppUser> signInManager, JWT tokenService) 
+            public Handler(UserManager<AppUser> userManager, Identity.SignInManager<AppUser> signInManager, TokenService tokenService) 
             {
                 this.userManager = userManager;
                 this.signInManager = signInManager;

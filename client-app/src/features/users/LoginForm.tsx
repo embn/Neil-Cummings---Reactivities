@@ -7,8 +7,6 @@ import { useStore } from "../../app/stores/store";
 export default observer(function LoginForm() {
     const {userStore} = useStore();
 
-    /* TODO set focus on email field */
-
     return (
         <Formik
             initialValues={{ email: '', password: '', error: null}}
@@ -16,8 +14,8 @@ export default observer(function LoginForm() {
                 setErrors({error: 'Invalid email or password'}))
             }
         >
-            {({handleSubmit, isSubmitting, errors}) => (
-                <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
+            {({isSubmitting, errors}) => (
+                <Form className='ui form'>
                     <Header as='h2' content='Log into Reactivities' color='teal' textAlign='center' />
                     <MyTextInput name='email' placeholder='Email' autoFocus={true}/>
                     <MyTextInput name='password' placeholder='Password' type='password' />

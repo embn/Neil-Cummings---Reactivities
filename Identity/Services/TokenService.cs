@@ -9,10 +9,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Identity.Services
 {
-    public class JWT
+    public class TokenService
     {
         private readonly IConfiguration config;
-        public JWT(IConfiguration config)
+        public TokenService(IConfiguration config)
         {
             this.config = config;
         }

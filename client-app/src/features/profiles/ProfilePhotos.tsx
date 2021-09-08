@@ -9,9 +9,9 @@ interface Props {
     profile: UserProfile;
 }
 
-export default observer(function ProfilePhotos({profile}:Props) {
+export default observer(function ProfilePhotos({profile}: Props) {
 
-    const { profileStore: {IsCurrentUser, uploadPhoto, uploadingPhoto, loadingPhoto, setMainPhoto, deletePhoto} } = useStore();
+    const { profileStore: {isCurrentUser, uploadPhoto, uploadingPhoto, loadingPhoto, setMainPhoto, deletePhoto} } = useStore();
     const [addPhotoMode, setAddPhotoMode] = useState(false);
     const [targetPhoto, setTargetPhoto] = useState('');
 
@@ -31,7 +31,7 @@ export default observer(function ProfilePhotos({profile}:Props) {
             <Grid>
                 <Grid.Column width={16}>
                     <Header floated='left' icon='image' content='Photos' />
-                    {IsCurrentUser && ( 
+                    {isCurrentUser && ( 
                         <Button floated='right' 
                                 basic 
                                 content={addPhotoMode ? 'Cancel' : 'Add Photo'} 
@@ -46,7 +46,7 @@ export default observer(function ProfilePhotos({profile}:Props) {
                             {profile.photos?.map(photo => (
                                 <Card key={photo.id}>
                                     <Image src={photo.url} />
-                                    {IsCurrentUser && (
+                                    {isCurrentUser && (
                                         <Button.Group>
                                             <Button
                                                 basic

@@ -26,9 +26,9 @@ namespace Application.Users
         public class Handler : IRequestHandler<Command, Result<UserDto>>
         {
             private readonly UserManager<AppUser> userManager;
-            private readonly JWT tokenService;
+            private readonly TokenService tokenService;
 
-            public Handler(UserManager<AppUser> userManager, JWT tokenService)
+            public Handler(UserManager<AppUser> userManager, TokenService tokenService)
             {
                 this.userManager = userManager;
                 this.tokenService = tokenService;

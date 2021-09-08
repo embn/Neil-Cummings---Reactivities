@@ -82,11 +82,12 @@ const Account = {
     login: (user: UserFormValues) => requests.post<User>('/account/login', user),
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
 }
+//keys needs to match parameter in API
 const Profile = {
     get: (username: string) => requests.get<UserProfile>(`/profile/${username}`),
+    update: (profile: Partial<UserProfile>) => requests.put(`/profile`, profile),
     uploadPhoto: (file: Blob) => {
         let formData = new FormData();
-        //key needs to match parameter in API
         formData.append('File', file )
         return axios.post<Photo>('photos', formData, {
             headers: { 'Content-type': 'multipart/form-data' }

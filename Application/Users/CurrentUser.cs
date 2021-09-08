@@ -19,9 +19,9 @@ namespace Application.Users
         {
             private readonly UserManager<AppUser> userManager;
             private readonly IHttpContextAccessor httpContextAccessor;
-            private readonly JWT tokenService;
+            private readonly TokenService tokenService;
 
-            public Handler(UserManager<AppUser> userManager, JWT tokenService, IHttpContextAccessor httpContextAccessor)
+            public Handler(UserManager<AppUser> userManager, TokenService tokenService, IHttpContextAccessor httpContextAccessor)
             {
                 this.userManager = userManager;
                 this.httpContextAccessor = httpContextAccessor;
@@ -33,7 +33,7 @@ namespace Application.Users
                 var user = await userManager.Users
                     .Include(x => x.Photos.Where(x => x.IsMain))
                     .FirstOrDefaultAsync(x => x.UserName == httpContextAccessor.HttpContext.User.Identity.Name);
-
+                    
                 if (user == null)
                     return null;
 

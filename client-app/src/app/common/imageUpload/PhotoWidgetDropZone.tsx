@@ -16,7 +16,6 @@ export default function PhotoWidgetDropZone({setFiles}:Props) {
         textAlign: 'center' as 'center',
         height: 200,
     }
-
     const dzActiveStyle = {
         borderColor: 'green',
     }

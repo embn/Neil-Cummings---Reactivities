@@ -8,11 +8,12 @@ export default class ProfileStore {
     loadingProfile = false;
     uploadingPhoto = false;
     loadingPhoto = false;
+    savingProfile = false;
 
     constructor() {
         makeAutoObservable(this);
     }
-    get IsCurrentUser() {
+    get isCurrentUser() {
         if (store.userStore.user && this.profile) {
             return store.userStore.user.userName === this.profile.userName;
         }
@@ -85,6 +86,25 @@ export default class ProfileStore {
             console.log(error);
         } finally {
             runInAction(() => this.loadingPhoto = false);
+        }
+    }
+    updateProfile = async (profile : Partial<UserProfile>)  => {
+        this.savingProfile = true;
+        try {
+            await agent.Profile.update(profile);
+            runInAction(() => {
+                let userDisplayName = store.userStore.user?.displayName;
+                if (this.profile?.displayName && profile.displayName !== userDisplayName) {
+                    
+                    this.profile.displayName = profile.displayName!;
+                    this.profile.bio = profile.bio!;
+                    store.userStore.setDisplayName(profile.displayName!);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            runInAction(() => this.savingProfile = false);
         }
     }
 }

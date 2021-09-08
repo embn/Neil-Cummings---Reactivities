@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { Tab } from "semantic-ui-react";
 import { UserProfile } from "../../app/models/userProfile";
+import ProfileAbout from "./ProfileAbout";
 import ProfilePhotos from "./ProfilePhotos";
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
 }
 export default observer(function ProfileContent({profile}:Props) {
     const panes = [
-        {menuItem: 'About', render: () => <Tab.Pane>About Content</Tab.Pane>},
+        {menuItem: 'About', render: () => <ProfileAbout profile={profile} />},
         {menuItem: 'Photos', render: () => <ProfilePhotos profile={profile} />}, 
         {menuItem: 'Activities', render: () => <Tab.Pane>Activities Content</Tab.Pane>}, 
         {menuItem: 'Followers', render: () => <Tab.Pane>Followers Content</Tab.Pane>}, 

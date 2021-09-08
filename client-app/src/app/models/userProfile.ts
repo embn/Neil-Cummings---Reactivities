@@ -19,4 +19,13 @@ export class UserProfile implements UserProfile {
         this.image = user.image;
     }
 }
+export class UserProfileFormValues {
+    displayName: string = '';
+    bio?: string = undefined;
+
+    constructor(profile: UserProfile ) {
+        this.displayName = profile.displayName;
+        this.bio = profile.bio;
+    }
+}
 
