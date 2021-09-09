@@ -47,7 +47,7 @@ export default observer(function ProfilePhotos({profile}: Props) {
                                 <Card key={photo.id}>
                                     <Image src={photo.url} />
                                     {isCurrentUser && (
-                                        <Button.Group>
+                                        <Button.Group fluid widths={2}>
                                             <Button
                                                 basic
                                                 color='green'
@@ -66,6 +66,7 @@ export default observer(function ProfilePhotos({profile}: Props) {
                                                 disabled={photo.isMain}
                                                 loading={targetPhoto === 'delete-' + photo.id && loadingPhoto}
                                                 onClick={e => handleDeletePhoto(photo, e)}
+                                                
                                             />
                                         </Button.Group>
                                     )}
