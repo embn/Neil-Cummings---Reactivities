@@ -10,9 +10,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Users
 {
-    public class RegisterNewUser
+    public enum RegisterError
     {
-        public class Command : IRequest<Result<UserDto>>
+        EmailTaken,
+        UserNameTaken,
+        Unknown
+    }
+    public class Register
+    {
+        public class Command : IRequest<Result<UserDto, RegisterError>>
         {
             public RegisterUserDto Registration { get; set; }
         }
@@ -23,7 +29,7 @@ namespace Application.Users
                 RuleFor(x => x.Registration).SetValidator(userValidator);
             }
         }
-        public class Handler : IRequestHandler<Command, Result<UserDto>>
+        public class Handler : IRequestHandler<Command, Result<UserDto, RegisterError>>
         {
             private readonly UserManager<AppUser> userManager;
             private readonly TokenService tokenService;
@@ -34,15 +40,15 @@ namespace Application.Users
                 this.tokenService = tokenService;
             }
 
-            public async Task<Result<UserDto>> Handle(Command command, CancellationToken cancellationToken)
+            public async Task<Result<UserDto, RegisterError>> Handle(Command command, CancellationToken cancellationToken)
             {
                 if (await userManager.Users.AnyAsync(x => x.Email == command.Registration.Email))
                 {
-                    return Result<UserDto>.Failure("EmailTaken");
+                    return Result<UserDto, RegisterError>.Failure(RegisterError.EmailTaken);
                 }
                 if (await userManager.Users.AnyAsync(x => x.UserName == command.Registration.UserName))
                 {
-                    return Result<UserDto>.Failure("UserNameTaken");
+                    return Result<UserDto, RegisterError>.Failure(RegisterError.UserNameTaken);
                 }
 
                 var user = new AppUser
@@ -62,9 +68,9 @@ namespace Application.Users
                         Token = tokenService.CreateToken(user),
                         UserName = user.UserName,
                     };
-                    return Result<UserDto>.Success(userDto);
+                    return Result<UserDto, RegisterError>.Success(userDto);
                 }
-                return Result<UserDto>.Failure(null);
+                return Result<UserDto, RegisterError>.Failure(RegisterError.Unknown);
             }
         }
     }

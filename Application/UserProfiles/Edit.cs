@@ -58,7 +58,6 @@ namespace Application.UserProfiles
                     return Result<Unit>.Success(Unit.Value);
 
                 return Result<Unit>.Failure("Failed to update user");
-
             }
         }
     }
