@@ -39,7 +39,7 @@ namespace Infrastructure.Security
             // 3. even though we leave the scope of this method dbContext still keeps the attendee in memory in order to track it.
             ActivityAttendee attendee = dbContext.ActivityAttendees
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.AppUserId == userId && x.ActivityId == activityId)
+                .SingleOrDefaultAsync(x => x.UserId == userId && x.ActivityId == activityId)
                 .Result;
             if (attendee == null)
                 return Task.CompletedTask;

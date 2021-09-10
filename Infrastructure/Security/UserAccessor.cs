@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -13,7 +14,7 @@ namespace Infrastructure.Security
 
         public string GetUserName()
         {
-            return httpContextAccessor.HttpContext.User.Identity.Name;
+            return httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
         }
     }
 }

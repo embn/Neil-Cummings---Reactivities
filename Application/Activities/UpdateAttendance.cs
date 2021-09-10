@@ -31,7 +31,7 @@ namespace Application.Activities
             {
                 Activity activity = await context.Activities
                     .Include(a => a.Attendees)
-                    .ThenInclude(aa => aa.AppUser)
+                    .ThenInclude(aa => aa.User)
                     .FirstOrDefaultAsync(x => x.Id == command.Id);
 
                 if (activity == null)
@@ -43,8 +43,8 @@ namespace Application.Activities
                 if (user == null)
                     return null;
 
-                string hostName = activity.Attendees.FirstOrDefault(x => x.IsHost)?.AppUser?.UserName;
-                ActivityAttendee attendance = activity.Attendees.FirstOrDefault(x => x.AppUserId == user.Id);
+                string hostName = activity.Attendees.FirstOrDefault(x => x.IsHost)?.User?.UserName;
+                ActivityAttendee attendance = activity.Attendees.FirstOrDefault(x => x.UserId == user.Id);
 
                 if (attendance != null && hostName == user.UserName)
                     activity.IsCancelled = !activity.IsCancelled;
@@ -56,7 +56,7 @@ namespace Application.Activities
                 {
                     attendance = new ActivityAttendee
                     {
-                        AppUser = user,
+                        User = user,
                         Activity = activity,
                         IsHost = false
                     };

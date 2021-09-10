@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210909172951_CommentEntityAdded")]
+    partial class CommentEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.ActivityAttendee", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ActivityId")
@@ -59,7 +61,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsHost")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("UserId", "ActivityId");
+                    b.HasKey("AppUserId", "ActivityId");
 
                     b.HasIndex("ActivityId");
 
@@ -142,10 +144,7 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("ActivityId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AuthorId")
+                    b.Property<Guid?>("ActivityId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Body")
@@ -154,11 +153,14 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityId");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -320,15 +322,15 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.AppUser", "User")
+                    b.HasOne("Domain.AppUser", "AppUser")
                         .WithMany("Activities")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Activity");
 
-                    b.Navigation("User");
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Domain.Comment", b =>
@@ -336,16 +338,15 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Activity", "Activity")
                         .WithMany("Comments")
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Domain.AppUser", "Author")
+                    b.HasOne("Domain.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Activity");
 
-                    b.Navigation("Author");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>

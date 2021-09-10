@@ -12,6 +12,7 @@ namespace Persistence
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -19,13 +20,13 @@ namespace Persistence
             // Rather than ussing EF conventions, which would generate a simple jointable with ids,
             // we use EF fluent API here in order to make our own jointable
 
-            builder.Entity<ActivityAttendee>(x => x.HasKey(aa => new { aa.AppUserId, aa.ActivityId }));
+            builder.Entity<ActivityAttendee>(x => x.HasKey(aa => new { aa.UserId, aa.ActivityId }));
 
 
             builder.Entity<ActivityAttendee>()
-                .HasOne(aa => aa.AppUser)
+                .HasOne(aa => aa.User)
                 .WithMany(u => u.Activities)
-                .HasForeignKey(aa => aa.AppUserId);
+                .HasForeignKey(aa => aa.UserId);
 
             builder.Entity<ActivityAttendee>()
                 .HasOne(aa => aa.Activity)
@@ -36,6 +37,12 @@ namespace Persistence
                 .HasMany(u => u.Photos)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId);
+
+            //DeleteBehavior.Cascade means if Activity is deleted, all associated comments are deleted also
+            builder.Entity<Comment>()
+                .HasOne(x => x.Activity)
+                .WithMany(x => x.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

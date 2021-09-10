@@ -18,7 +18,7 @@ export default class ActivityStore {
     private setActivity = (activity: Activity) => {
         const user = store.userStore.user;
         if (user) {
-            activity.isGoing = activity.attendees!.some(x => x.userName === user.userName);
+            activity.isGoing = activity.attendees.some(x => x.userName === user.userName);
             activity.isHost = activity.hostUserName === user.userName;
             activity.host = activity.attendees?.find(x => x.userName === activity.hostUserName);
 
@@ -161,8 +161,8 @@ export default class ActivityStore {
             await agent.Activities.attend(this.selectedActivity!.id);
             runInAction(() => {
                 if (this.selectedActivity?.isGoing) {
-                    let index = this.selectedActivity.attendees!.findIndex(x => x.userName === user?.userName);
-                    this.selectedActivity.attendees!.splice(index, 1);
+                    let index = this.selectedActivity.attendees.findIndex(x => x.userName === user?.userName);
+                    this.selectedActivity.attendees.splice(index, 1);
                     this.selectedActivity.isGoing = false;
                 } else {
                     const attendee = new UserProfile(user!);
@@ -193,5 +193,10 @@ export default class ActivityStore {
         } finally {
             runInAction(() => this.loading = false);
         }
+    }
+    clearSelectedActivity = () => {
+        runInAction(() => {
+            this.selectedActivity = undefined;
+        });
     }
 }

@@ -54,7 +54,7 @@ export default observer(function ProfilePhotos({profile}: Props) {
                                                 content='Main'
                                                 name={'main-' + photo.id}
                                                 disabled={photo.isMain}
-                                                loading={targetPhoto === 'main' + photo.id && loadingPhoto}
+                                                loading={loadingPhoto && targetPhoto === 'main-' + photo.id }
                                                 onClick={e => handleSetMainPhoto(photo, e)}
                                             />
                                             <Button 
@@ -64,7 +64,7 @@ export default observer(function ProfilePhotos({profile}: Props) {
                                                 content='Delete'
                                                 name={'delete-' + photo.id}
                                                 disabled={photo.isMain}
-                                                loading={targetPhoto === 'delete-' + photo.id && loadingPhoto}
+                                                loading={loadingPhoto && targetPhoto === 'delete-' + photo.id }
                                                 onClick={e => handleDeletePhoto(photo, e)}
                                                 
                                             />
