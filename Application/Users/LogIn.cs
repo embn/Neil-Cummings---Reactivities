@@ -48,7 +48,7 @@ namespace Application.Users
                     DisplayName = user.DisplayName,
                     Token = tokenService.CreateToken(user),
                     UserName = user.UserName,
-                    Image = user.Photos.FirstOrDefault(x => x.IsMain).Url
+                    Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
                 };
                 return Result<UserDto>.Success(userDto);
             }

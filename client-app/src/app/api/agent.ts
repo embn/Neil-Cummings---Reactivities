@@ -18,6 +18,7 @@ const sleep = (delay: number) => {
 }
 
 axios.interceptors.response.use(async response => { 
+    //latency fakery for development
     await sleep(1000);
     return response;
 }, (error: AxiosError) => {
@@ -86,6 +87,7 @@ const Account = {
 const Profile = {
     get: (username: string) => requests.get<UserProfile>(`/profile/${username}`),
     update: (profile: Partial<UserProfile>) => requests.put(`/profile`, profile),
+    updateFollowing: (userName: string) => requests.post(`/follow/${userName}`, {}),
     uploadPhoto: (file: Blob) => {
         let formData = new FormData();
         formData.append('File', file )
@@ -96,11 +98,11 @@ const Profile = {
     },
     setMainPhoto: (id: string) => requests.put(`photos/${id}/setMain`, {}),
     deletePhoto: (id: string) => requests.del(`photos/${id}`),
+    listFollowing: (userName: string, predicate: string) => requests.get<UserProfile[]>(`/follow/${userName}?predicate=${predicate}`),
 }
 const agent = {
     Activities,
     Account,
     Profile 
 }
-
 export default agent;

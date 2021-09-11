@@ -44,8 +44,7 @@ export default class CommentStore {
         }
     }
     stopHubConnection = () => {
-        this.hubConnection
-            ?.stop()
+        this.hubConnection?.stop()
             .catch(error => console.log('Error stopping connection to hub: ' + error));
     }
     clearComments = () => {

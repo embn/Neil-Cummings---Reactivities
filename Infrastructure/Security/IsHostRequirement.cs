@@ -37,7 +37,7 @@ namespace Infrastructure.Security
             // 1. naviagation properties are null when not included
             // 2. lifetime dbContext is the whole http-request 
             // 3. even though we leave the scope of this method dbContext still keeps the attendee in memory in order to track it.
-            ActivityAttendee attendee = dbContext.ActivityAttendees
+            ActivityAttendance attendee = dbContext.Attendances
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.UserId == userId && x.ActivityId == activityId)
                 .Result;

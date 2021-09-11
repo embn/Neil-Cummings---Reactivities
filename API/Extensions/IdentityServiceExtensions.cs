@@ -24,6 +24,7 @@ namespace API.Extensions
                 opt.Password.RequiredUniqueChars = pwSettings.RequiredUniqueChars;
                 opt.Password.RequireUppercase = pwSettings.RequireUppercase;
                 opt.Password.RequireNonAlphanumeric = pwSettings.RequireNonAlphanumeric;
+                opt.Password.RequireDigit = pwSettings.RequireDigit;
             })
             .AddEntityFrameworkStores<DataContext>()
             .AddSignInManager<Identity.SignInManager<AppUser>>()
@@ -41,7 +42,6 @@ namespace API.Extensions
                         ValidateIssuer = false,
                         ValidateAudience = false,
                     };
-
                     
                     opt.Events = new JwtBearerEvents
                     {

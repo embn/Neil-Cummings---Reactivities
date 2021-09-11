@@ -44,7 +44,7 @@ namespace Application.Activities
                     return null;
 
                 string hostName = activity.Attendees.FirstOrDefault(x => x.IsHost)?.User?.UserName;
-                ActivityAttendee attendance = activity.Attendees.FirstOrDefault(x => x.UserId == user.Id);
+                ActivityAttendance attendance = activity.Attendees.FirstOrDefault(x => x.UserId == user.Id);
 
                 if (attendance != null && hostName == user.UserName)
                     activity.IsCancelled = !activity.IsCancelled;
@@ -54,7 +54,7 @@ namespace Application.Activities
 
                 if (attendance == null)
                 {
-                    attendance = new ActivityAttendee
+                    attendance = new ActivityAttendance
                     {
                         User = user,
                         Activity = activity,

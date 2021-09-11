@@ -20,8 +20,7 @@ export default class ActivityStore {
         if (user) {
             activity.isGoing = activity.attendees.some(x => x.userName === user.userName);
             activity.isHost = activity.hostUserName === user.userName;
-            activity.host = activity.attendees?.find(x => x.userName === activity.hostUserName);
-
+            activity.host = activity.attendees.find(x => x.userName === activity.hostUserName) as UserProfile
         }
         activity.date = new Date(activity.date!);
         this.activities.set(activity.id, activity)
@@ -197,6 +196,16 @@ export default class ActivityStore {
     clearSelectedActivity = () => {
         runInAction(() => {
             this.selectedActivity = undefined;
+        });
+    }
+    updateAttendeeFollowing = (userName: string) => {
+        this.activities.forEach(activity => {
+            activity.attendees.forEach(attendee => {
+                if (attendee.userName === userName) {
+                    attendee.following ? attendee.followersCount-- : attendee.followersCount++;
+                    attendee.following = !attendee.following;
+                }
+            });
         });
     }
 }

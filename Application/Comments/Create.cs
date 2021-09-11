@@ -8,7 +8,6 @@ using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -48,16 +47,15 @@ namespace Application.Comments
                 if (activity == null)
                     return null;
 
-                //userAccessor is broken if called from Hub!!!
                 string userName = userAccessor.GetUserName();
                 AppUser user = await context.Users
                     .Include(x => x.Photos.Where(x => x.IsMain))
                     .FirstOrDefaultAsync(x => x.UserName == userName);
 
-                // if (user == null)
-                // {
-                //     return Result<CommentDto>.Failure("Failed to get user");
-                // }
+                if (user == null)
+                {
+                    return Result<CommentDto>.Failure("Failed to get user");
+                }
 
                 var comment = new Comment
                 {
