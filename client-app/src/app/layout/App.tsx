@@ -1,4 +1,3 @@
-
 import NavBar from './NavBar';
 import { observer } from 'mobx-react-lite';
 import { Route, Switch, useLocation } from 'react-router-dom';
