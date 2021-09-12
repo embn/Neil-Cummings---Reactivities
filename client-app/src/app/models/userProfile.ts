@@ -31,4 +31,9 @@ export class UserProfileFormValues {
         this.bio = profile.bio;
     }
 }
-
+export interface UserActivity {
+    id: string;
+    title: string;
+    category: string
+    date: Date,
+}

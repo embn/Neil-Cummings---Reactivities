@@ -28,6 +28,13 @@ namespace Application.Core
                 .ForMember(dest => dest.Following, opt => opt.MapFrom(src => 
                     src.User.Followers.Any(x => x.Observer.UserName == currentUserName)));
 
+            CreateMap<ActivityAttendance, UserActivityDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Activity.Id))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Activity.Title))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Activity.Category))
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Activity.Date))
+                .ForMember(dest => dest.HostUserName, opt => opt.MapFrom(src => src.Activity.Attendees.FirstOrDefault(x => x.IsHost).User.UserName));
+
             CreateMap<AppUser, Profile>()
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url))
                 .ForMember(dest => dest.FollowersCount, opt => opt.MapFrom(src => src.Followers.Count))
@@ -35,7 +42,6 @@ namespace Application.Core
                 .ForMember(dest => dest.Following, opt => opt.MapFrom(src => 
                     src.Followers.Any(x => x.Observer.UserName == currentUserName)));
 
-                //.ForMember(dest => dest.Photos, opt => opt.MapFrom(src => (src.UserName == currentUserName) ? src.Photos : src.Photos.Where(p => p.IsMain)));
 
             CreateMap<Photo, PhotoDto>();
 

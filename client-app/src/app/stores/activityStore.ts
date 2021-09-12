@@ -44,7 +44,7 @@ export default class ActivityStore {
         return this.activities.get(id);
     }
 
-    get axiosParams() {
+    get agentParams() {
         const params = new URLSearchParams();
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
         params.append('pageSize', this.pagingParams.pageSize.toString());
@@ -118,7 +118,7 @@ export default class ActivityStore {
     loadActivities = async () => {
         this.loadingInitial = true;
         try {
-            const result = await agent.Activities.list(this.axiosParams);
+            const result = await agent.Activities.list(this.agentParams);
             result.data.forEach(activity => {
                 this.setActivity(activity);
             });

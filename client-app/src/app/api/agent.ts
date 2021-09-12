@@ -4,7 +4,7 @@ import { history } from "../..";
 import { Activity, ActivityFormValues } from "../models/activity";
 import { PaginatedResult } from "../models/pagination";
 import { User, UserFormValues } from "../models/user";
-import { Photo, UserProfile } from "../models/userProfile";
+import { Photo, UserActivity, UserProfile } from "../models/userProfile";
 import { store } from "../stores/store";
 
 
@@ -23,7 +23,6 @@ axios.interceptors.response.use(async response => {
     const pagination = response.headers['pagination'];
     if (pagination) {
         response.data = new PaginatedResult(response.data, JSON.parse(pagination));
-        console.log('paginated result fetched');//TODO: remove
         return response as AxiosResponse<PaginatedResult<any>>
     }
     return response;
@@ -105,6 +104,7 @@ const Profile = {
     setMainPhoto: (id: string) => requests.put(`photos/${id}/setMain`, {}),
     deletePhoto: (id: string) => requests.del(`photos/${id}`),
     listFollowing: (userName: string, predicate: string) => requests.get<UserProfile[]>(`/follow/${userName}?predicate=${predicate}`),
+    listActivities: (userName: string, predicate: string) => requests.get<UserActivity[]>(`/profile/${userName}/activities?predicate=${predicate}`),
 }
 const agent = {
     Activities,

@@ -36,6 +36,7 @@ export default observer (function ActivityDetailedHeader({activity}: Props) {
                 <Segment style={activityImageTextStyle} basic>
                     <Item.Group>
                         <Item>
+                            
                             <Item.Content>
                                 <Header
                                     size='huge'
