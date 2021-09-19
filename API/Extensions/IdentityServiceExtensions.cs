@@ -36,7 +36,6 @@ namespace API.Extensions
             //fetched from appsettings
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt => {
                     opt.TokenValidationParameters = new TokenValidationParameters {
