@@ -1,7 +1,7 @@
 import {format} from 'date-fns';
 import { makeAutoObservable, reaction, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Activity, ActivityFormValues } from "../models/activity";
+import { Activity, ActivityFormValues } from '../models/activity';
 import { Pagination, PagingParams } from '../models/pagination';
 import { UserProfile } from "../models/userProfile";
 import { store } from "./store";
@@ -15,7 +15,6 @@ export default class ActivityStore {
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
     predicate = new Map().set('all', true);
-
 
     constructor() {
         makeAutoObservable(this);
@@ -43,7 +42,6 @@ export default class ActivityStore {
     private getActivity = (id: string) => {
         return this.activities.get(id);
     }
-
     get agentParams() {
         const params = new URLSearchParams();
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
@@ -76,7 +74,6 @@ export default class ActivityStore {
             }, {} as {[key: string]: Activity[]})/* initial value used to build return value of reduce */
         );
     }
-
     setPagingParams = (pagingParams: PagingParams) => {
         this.pagingParams = pagingParams;
     }
@@ -129,7 +126,6 @@ export default class ActivityStore {
             this.setLoadingInitial(false);
         }
     }
-
     //async is syntactic sugar. it compiles to promise syntax
     loadActivity = async (id: string) => {
         let activity = this.getActivity(id);
@@ -155,7 +151,6 @@ export default class ActivityStore {
         //need to return so our return value is guaranteed to be Promise<Activity>
         return activity;
     }
-
     createActivity = async (formValues: ActivityFormValues) => {
 
         const user = store.userStore.user;
@@ -175,7 +170,6 @@ export default class ActivityStore {
             console.log(error);       
         }
     }
-
     updateActivity = async (formValues : ActivityFormValues) => {
         try {
             await agent.Activities.update(formValues);
@@ -194,7 +188,6 @@ export default class ActivityStore {
             console.log(error);
         }
     }
-
     deleteActivity = async (id: string) => {
         this.loading = true;
         try {
@@ -211,7 +204,6 @@ export default class ActivityStore {
             });
         }
     }
-
     updateAttendance = async () => {
         const user = store.userStore.user;
         this.loading = true;

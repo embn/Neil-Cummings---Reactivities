@@ -47,9 +47,8 @@ namespace API.Extensions
                     {
                         OnMessageReceived = context =>
                         {
-                            //Only for signalR endpoint, need to pass token as query-string
-                            //becuase signalR hubs dont have httpheader
-                            string token = context.Request.Query["authToken"];
+                            //"access_token" name is significant for SignalR 
+                            string token = context.Request.Query["access_token"];
                             string path = context.HttpContext.Request.Path;
                             if (!string.IsNullOrEmpty(token) && path.StartsWith("/chat"))
                             {

@@ -23,7 +23,7 @@ export default observer(function ProfilePage() {
     return (
         <Grid>
             <Grid.Column width={16}>
-                {/* For some reason the bang operator wouldn't work here*/}
+                {/* For some reason the bang operator wouldn't work here */}
                 {profile &&
                     <>
                         <ProfileHeader profile={profile} />

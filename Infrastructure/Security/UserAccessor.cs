@@ -13,8 +13,7 @@ namespace Infrastructure.Security
 
         public string GetUserName()
         {
-            var name = httpContextAccessor.HttpContext.User.Identity.Name;
-            return name;
+            return httpContextAccessor.HttpContext.User.Identity.Name;
         }
     }
 }

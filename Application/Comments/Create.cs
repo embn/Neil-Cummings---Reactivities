@@ -56,7 +56,7 @@ namespace Application.Comments
                 {
                     return Result<CommentDto>.Failure("Failed to get user");
                 }
-
+                
                 var comment = new Comment
                 {
                     Author = user,

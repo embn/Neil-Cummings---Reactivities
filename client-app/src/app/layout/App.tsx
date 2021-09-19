@@ -16,6 +16,7 @@ import ModalContainer from '../common/modals/ModalContainer';
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ProfilePage from '../../features/profiles/ProfilePage';
 import { Container } from 'semantic-ui-react';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   const location = useLocation();
@@ -52,12 +53,12 @@ function App() {
                   otherwise requesting createActivity will not clear the form 
             */}
             <Switch>
-              <Route exact path='/activities' component={ActivityDashboard}/>
-              <Route path=      '/activities/:id' component={ActivityDetails}/>
-              <Route path={[    '/createActivity', 
+              <PrivateRoute exact path='/activities' component={ActivityDashboard}/>
+              <PrivateRoute path=      '/activities/:id' component={ActivityDetails}/>
+              <PrivateRoute path={[    '/createActivity', 
                                 '/manage/:id']} key={location.key} component={ActivityForm}/>
-              <Route path=      '/profile/:username' component={ProfilePage} />
-              <Route path=      '/errors' component={TestErrors} />
+              <PrivateRoute path=      '/profile/:username' component={ProfilePage} />
+              <PrivateRoute path=      '/errors' component={TestErrors} />
               <Route path=      '/server-error' component={ServerError} />
               <Route path=      '/login' component={LoginForm} />
               <Route component={NotFound} />

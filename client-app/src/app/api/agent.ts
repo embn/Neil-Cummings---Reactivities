@@ -8,18 +8,17 @@ import { Photo, UserActivity, UserProfile } from "../models/userProfile";
 import { store } from "../stores/store";
 
 
-axios.defaults.baseURL = 'http://localhost:5000/api';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
-
-//delay fakery for testing
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, delay);
     })
 }
-
 axios.interceptors.response.use(async response => { 
-    await sleep(500);
+    if (process.env.NODE_ENV === 'development') {
+        await sleep(500);
+    }
     const pagination = response.headers['pagination'];
     if (pagination) {
         response.data = new PaginatedResult(response.data, JSON.parse(pagination));

@@ -10,6 +10,7 @@ import ProfilePhotos from "./ProfilePhotos";
 interface Props {
     profile: UserProfile;
 }
+// TODO remove profile deps from components, instead fetch profile from store
 export default observer(function ProfileContent({profile}:Props) {
     const {profileStore} = useStore();
     const panes = [

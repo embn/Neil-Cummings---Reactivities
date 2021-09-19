@@ -16,7 +16,6 @@ namespace Identity.Services
         {
             this.config = config;
         }
-
         public string CreateToken(IdentityUser user)
         {
             var claims = new List<Claim>()
@@ -31,7 +30,7 @@ namespace Identity.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = creds
+                SigningCredentials = creds,
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
