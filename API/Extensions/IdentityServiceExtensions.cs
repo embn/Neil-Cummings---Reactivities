@@ -30,8 +30,11 @@ namespace API.Extensions
             .AddSignInManager<Identity.SignInManager<AppUser>>()
             .AddUserManager<Identity.UserManager<AppUser>>();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["API:Key"]));
+            //fetched from user-secrets
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["API:Key"]));
 
+            //fetched from appsettings
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
