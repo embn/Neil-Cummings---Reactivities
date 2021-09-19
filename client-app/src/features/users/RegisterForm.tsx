@@ -9,8 +9,6 @@ import ValidationErrors from "../errors/ValidationErrors";
 export default observer(function RegisterForm() {
     const {userStore} = useStore();
 
-    /* TODO set focus on email field */
-
     return (
         <Formik
             initialValues={{ displayName: '', userName: '', email: '', password: '', error: null}}
