@@ -43,10 +43,33 @@ namespace API
             //ordering of middleware is important.
             app.UseMiddleware<ExceptionMiddleware>();
 
+            app.UseXContentTypeOptions();
+            app.UseReferrerPolicy(opt => opt.NoReferrer());
+            app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
+            app.UseXfo(opt => opt.Deny());
+            app.UseCsp(opt => opt
+                .BlockAllMixedContent()
+                .StyleSources(s => s.Self().CustomSources("https://fonts.googleapis.com"))
+                .FontSources(s => s.Self().CustomSources("https://fonts.googleapis.com", "https://fonts.gstatic.com", "data:"))
+                .FormActions(s => s.Self())
+                .FrameAncestors(s => s.Self())
+                .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com", "blob:"))
+            );
+
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+            }
+            else
+            {
+                //supposedly this does not work on Heroku.com (not tested)
+                //app.UseHsts();
+                //so we do this instead:
+                app.Use(async (context, next) => {
+                    context.Response.Headers.Add("strict-transport-security", "max-age=31536000");
+                    await next.Invoke();
+                });
             }
             //app.UseHttpsRedirection();
             app.UseRouting();
