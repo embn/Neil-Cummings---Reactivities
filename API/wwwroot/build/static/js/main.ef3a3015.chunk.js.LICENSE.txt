@@ -1,1 +1,0 @@
-//! is used to ignore typescript, since we expect no scenario in which loadActivity returns undefined
